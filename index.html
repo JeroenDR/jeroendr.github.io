@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+	<link rel="stylesheet" href="indexcss.css">
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
@@ -28,10 +29,17 @@
   <p>Welcome on Jeroenderyck.com. This website is under construction.</p> 
 </div>
 <div class="container">
-  <div class="row-fluid">
+<div class="row-fluid row-top-space">
+<div class="card">
+  <div class="card-header"><h4 class="card-title">About Me</h4></div>
+  <div class="card-body"><p>Hi, my name is Jeroen and I'm a web developer. This site is supposed to give you a quick overlook on what I've achieved and what I'm doing at the moment.</p></div>
+</div>
+ </div>
+  <div class="row-fluid row-top-space">
   <div class="card">
   <div class="card-header">
     <ul class="nav nav-pills card-header-pills">
+	<h4 class="navbar-text" style="margin-right:50px;">Experience</h4>
 	<li class="nav-item">
         <a class="nav-link active" href="#currentjob" role="tab" data-toggle="tab">Current</a>
       </li>
@@ -47,40 +55,105 @@
     </ul>
   </div>
   <div class="card-body">
-    <h4 class="card-title">Experience</h4>
     <div class="tab-content">
 	  <div role="tabpanel" class="tab-pane active" id="currentjob">
-		<h5>Web Developer at NYC FISA</h5>
-		<p>Development and maintenance on the GUI and design of an existing time registration platform. 
-		Main work exists out of upgrading old frameworks that no longer run on modern browsers (>IE8). 
-		Upgrading ExtJS and other frameworks from a very old version to the newest one and maintaining the same speed, functionality and design.
-		</p>
+		<h5><a data-toggle="tooltip" title="New York,USA"><img src="usa.png" class="img-fluid" style="width:40px;" alt="Responsive image"></a>Web Developer at NYC FISA</h5>
+		<ul>
+		<li>Maintaining and upgrading Citytime,  a time registration and payroll system being used on a large scale by government employees in the city. Citytime is the largest payroll system in the 
+		world used by local governments.</li>
+		<li>Upgrading the software frameworks that are being used to be supported by newer browsers. (>IE8, Chrome, FireFox etc.). In particular upgrading ExtJS from version 2.0 to version 4.2.3. 
+		</li>
+		<li>Reworking the design that has been broken by the new frameworks that are being installed.
+		</li>
+		<li>Testing existing screens and modules with the newest browsers and fixing both functional and design problems.
+		</li>
+		</ul>
 	  </div>
 	  <div role="tabpanel" class="tab-pane fade" id="2013job">
-		<h5>Junior Java Developer at Citi</h5>
-		<p>Develop and enhance the Prime Finance Portal capabilities and work closely with local business users and business analysts to translate business requirements for the off-shore team.
-			Worked on back and front-end for new client attestation screens using ExtJS4.2 and Spring where a client admin can review and change the entitlements on the Portal. 
-			This project also included creating a customized Citi-theme to be used in ExtJS.
-			Adapting to new technologies being used for upcoming new projects like learning and working with ExtJS and MongoDB on the job.
-		</p>
+		<h5><a data-toggle="tooltip" title="New York,USA"><img src="usa.png" class="img-fluid" style="width:40px;" alt="Responsive image"></a>Junior Java Developer at Citi</h5>
+		<ul>
+		<li>Develop and enhance the Prime Finance Portal capabilities and work closely with local business users and business analysts to translate business requirements for the off-shore team. 
+		</li>
+		<li>
+		Back-end application/service development (Java).
+		</li>
+		<li>Support for Production and UAT Portals during NAM/EMEA hours. 
+		</li>
+		<li>Provide Testing, Integration and Development SME to NAM/EMEA developers. 
+		</li>
+		<li>Support and development work on Prime Finance Platform items –App Servers, non-Production monitoring, NoSQL data stores. 
+		</li>
+		<li>Development on an automated testing system using Selenium to get feedback on how stable and fast the Portal runs at any given time/day. 
+		</li>
+		<li>Work on back and front-end for new client attestation screens using ExtJS4.2 and Spring where a client admin can review and change the entitlements on the Portal. This project also included creating a customized Citi-theme to be used in ExtJS. 
+		</li>
+		<li>Improving access and retrieval of refdata by setting up a MongoDB and saving and retrieving data from this database that is used often. This improved the speed for some Portal screens. 
+		</li>
+		<li>Adapting to new technologies being used for upcoming new projects like learning and working with ExtJS on the job. 
+		<ul>
 	  </div>
 	  <div role="tabpanel" class="tab-pane fade" id="2011job">
-		<h5>Application Engineer at KBC Bank</h5>
-		<p>Maintenance of Operational Systems & application engineer
-		</p>
+		<h5><a data-toggle="tooltip" title="Leuven,Belgium"><img src="belgium.png" class="img-fluid" style="width:40px;" alt="Responsive image"></a>Application Engineer at KBC Bank</h5>
+		<ul>
+		<li>Programmed in IBM EGL, SAS, and Java 
+		</li>
+		<li>Used IBM EGL to generate Java code from existing COBOL code 
+		</li>
+		<li>Maintained operational systems of the entire bank 
+		</li>
+		<li>Developed new applications for mobile banking 
+		</li>
+		<li>Maintained computer programs and infrastructure 
+		</li>
+		<li>Documented information system rationalization and optimization processes in MEGA 
+		</li>
+		<li>Worked in an AGILE environment with Scrums. 
+		</li>
+		<li>Helped evaluate and check standards of code outsourced in India 
+		</li>
+		<li>Assisted analysts with data modeling 
+		</li>
+		<li>Worked on scripts programmed in SAS that used SQL to insert, modify and delete records the bank database 
+		</ul>
 	  </div>
 	   <div role="tabpanel" class="tab-pane fade" id="internship">
-		<h5>Researcher at Instituto Superior Politécnico de Viseu</h5>
-		<p>The main job was to make a comparison of the available open source ERP software available on both Ubuntu & Windows. 
-		This comparison had to be made in a report which discussed the main functionalities of ERP software on each system.
-		</p>
+		<h5><a data-toggle="tooltip" title="Viseu,Portugal"><img src="portugal.png" class="img-fluid" style="width:40px;" alt="Responsive image"></a>Researcher at Instituto Superior Politécnico de Viseu</h5>
+		<ul>
+		<li>
+		Research five main open source ERP systems available in both Windows and Ubuntu and compare them by their main functionality
+		</li>
+		<li>
+		Write an extensive report comparing all of the systems and providing the university with a prefered system to use.
+		</li>
+		</ul>
 	   </div>
 	</div>
   </div>
 </div>
 	
   </div>
- 
+  
+  <div class="row-fluid row-top-space">
+<div class="card">
+  <div class="card-header"><h4 class="card-title">Technical Skills</h4></div>
+  <div class="card-body">
+	<h5>Javascript</h5>
+	<div class="progress">
+		<div class="progress-bar" role="progressbar" aria-valuenow="80" style="width: 80%" aria-valuemin="0" aria-valuemax="100">80%</div>
+	</div>
+	<h5>HTML</h5>
+	<div class="progress">
+		<div class="progress-bar" role="progressbar" aria-valuenow="90" style="width: 90%" aria-valuemin="0" aria-valuemax="100">90%</div>
+	</div>
+	<h5>Java</h5>
+	<div class="progress">
+		<div class="progress-bar" role="progressbar" aria-valuenow="70" style="width: 70%" aria-valuemin="0" aria-valuemax="100">70%</div>
+	</div>
+  </div>
+</div>
+ </div>
+
+
 </div>
 
 </body>
