@@ -5,13 +5,15 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
   <a class="navbar-brand" href="#">
+		<img src="movieloclogo.png" alt="Logo" style="width:40px;">
   </a>
   <ul class="navbar-nav">
   <li class="nav-item">
@@ -27,9 +29,153 @@
   </ul>
 </nav>
 <div class="jumbotron text-center">
-  <h1>Filmstat</h1>
-  <p>Coming Soon! This is an integration test that I'm doing for Atom</p>
-</div>
+	<h3>Upload your IMDb or Letterboxd list</h3>
+	<input type="file" id="uploadList">
+	<pre id="file"></pre>
 
+	<canvas id="myChart" style="width:20%"></canvas>
+</div>
+<script>
+//Global variables
+var movieListLength = 0;
+var movieTitlesSorted = [];
+var movieYearsSorted = [];
+
+var topMoviesByYear;
+
+// uploadList listener
+$("#uploadList").change(function() {
+	var reader = new FileReader();
+
+	//add fileReader by row
+  reader.addEventListener('load', function() {
+
+		//TODO : Read has to be changed
+		var movieListAsString = this.result;
+		var movieListAsArray = movieListAsString.split("\n");
+		var amountOfMovies = movieListAsArray.length-1;
+		movieListLength = amountOfMovies;
+
+		for (i = 1; i < amountOfMovies; i++) {
+			var movieRow = movieListAsArray[i].split(",");
+			createMovieArraysFromElement(movieRow);
+			var imdbId = movieRow[1];
+			var movieTitle = movieRow[5];
+		}
+		topMoviesByYear = findTopFiveMovieYears(movieYearsSorted);
+		createYearOverview(topMoviesByYear);
+  });
+  reader.readAsText(document.querySelector('input').files[0]);
+});
+
+function findTopFiveMovieYears(thearray){
+	var counts = {};
+	var arrayByYear = [];
+	var compare = 0;
+	var mostFrequent;
+
+	   for(var i = 0, len = thearray.length; i < len; i++){
+		   var word = thearray[i];
+
+		   if(counts[word] === undefined){
+			   counts[word] = 1;
+			   var tempObject = {};
+			   tempObject.year = word;
+			   tempObject.occurance = 1;
+			   arrayByYear.push(tempObject);
+		   }else{
+			   counts[word] = counts[word] + 1;
+			   var tempObject;
+			   arrayByYear.find(x => x.year === word).occurance++;
+		   }
+		   if(counts[word] > compare){
+				 compare = counts[word];
+				 mostFrequent = thearray[i];
+		   }
+		}
+		var moviesByYearArray = sortArrayObjectsByYear(arrayByYear);
+		var topFiveMovieYears = getTopFive(moviesByYearArray);
+
+	  return topFiveMovieYears;
+
+
+}
+
+	function createMovieArraysFromElement(rowElement){
+
+		movieTitlesSorted.push(rowElement[5]);
+		movieYearsSorted.push(rowElement[10]);
+	}
+
+	function sortArrayObjectsByYear(arrayOfObjects){
+
+
+			return arrayOfObjects.sort(compareObjects);
+	}
+
+	function compareObjects(a,b) {
+			  if (a.occurance < b.occurance)
+				return -1;
+			  if (a.occurance > b.occurance)
+				return 1;
+			  return 0;
+			}
+
+	function createPieChartByYear(theData){
+	var dataSet = [];
+	var labelSet = [];
+
+	for (i = 0; i < theData.length; i++) {
+		dataSet.push(theData[i].occurance);
+		labelSet.push(theData[i].year);
+	}
+
+		var ctx = document.getElementById('myChart').getContext('2d');
+
+
+				theDataStructure = {
+					datasets: [{
+						data: dataSet,
+						backgroundColor: [
+						"rgb(221,160,221",
+						"rgb(255,0,255)",
+						"rgb(138,43,226)",
+						"rgb(139,0,139)",
+						"rgb(75,0,130)",
+					]
+					}],
+
+					// These labels appear in the legend and in the tooltips when hovering different arcs
+					labels: labelSet,
+
+				};
+
+
+		var chart = new Chart(ctx, {
+			// The type of chart we want to create
+			type: 'pie',
+
+			// The data for our dataset
+			data: theDataStructure,
+
+			// Configuration options go here
+			options: {
+				maintainAspectRatio : false
+
+			}
+		});
+	}
+
+	//get last 5 items from array (top 5 in this case)
+	function getTopFive(arrayToFilter){
+		return arrayToFilter.slice(Math.max(arrayToFilter.length - 5, 1));
+	}
+
+	function createYearOverview(arrayOfMoviesByYear){
+		createPieChartByYear(arrayOfMoviesByYear);
+	}
+
+
+</script>
 </body>
 </html>
