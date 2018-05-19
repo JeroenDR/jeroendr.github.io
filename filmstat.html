@@ -29,19 +29,35 @@
   </ul>
 </nav>
 <div class="jumbotron text-center">
-	<h3>Upload your IMDb or Letterboxd list</h3>
-	<input type="file" id="uploadList">
-	<pre id="file"></pre>
-
-	<canvas id="myChart" style="width:20%"></canvas>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h3>Upload your IMDb or Letterboxd list</h3>
+				<input type="file" id="uploadList">
+				<pre id="file"></pre>
+			</div>
+		</div>
+		<div class="row" id="firstRowData" style="display:none">
+			<div class="col">
+				<h3>By year<h3>
+				<canvas id="yearChart"></canvas>
+			</div>
+			<div class="col">
+				<h3>By director<h3>
+				<canvas id="directorChart"></canvas>
+			</div>
+		</div>
+	</div>
 </div>
 <script>
 //Global variables
 var movieListLength = 0;
 var movieTitlesSorted = [];
 var movieYearsSorted = [];
+var movieDirectorsSorted = [];
 
 var topMoviesByYear;
+var topMoviesByDirector;
 
 // uploadList listener
 $("#uploadList").change(function() {
@@ -50,20 +66,10 @@ $("#uploadList").change(function() {
 	//add fileReader by row
   reader.addEventListener('load', function() {
 
-		//TODO : Read has to be changed
-		var movieListAsString = this.result;
-		var movieListAsArray = movieListAsString.split("\n");
-		var amountOfMovies = movieListAsArray.length-1;
-		movieListLength = amountOfMovies;
-
-		for (i = 1; i < amountOfMovies; i++) {
-			var movieRow = movieListAsArray[i].split(",");
-			createMovieArraysFromElement(movieRow);
-			var imdbId = movieRow[1];
-			var movieTitle = movieRow[5];
-		}
+		readMovieFileAlt(this.result);
 		topMoviesByYear = findTopFiveMovieYears(movieYearsSorted);
-		createYearOverview(topMoviesByYear);
+		topMoviesByDirector = findTopFiveMovieDirectors(movieDirectorsSorted);
+		createYearOverview();
   });
   reader.readAsText(document.querySelector('input').files[0]);
 });
@@ -100,11 +106,46 @@ function findTopFiveMovieYears(thearray){
 
 
 }
+function findTopFiveMovieDirectors(thearray){
+	var counts = {};
+	var arrayByDirector = [];
+	var compare = 0;
+	var mostFrequent;
+
+	   for(var i = 0, len = thearray.length; i < len; i++){
+		   var word = thearray[i];
+
+		   if(counts[word] === undefined){
+			   counts[word] = 1;
+			   var tempObject = {};
+			   tempObject.year = word;
+			   tempObject.occurance = 1;
+			   arrayByDirector.push(tempObject);
+		   }else{
+			   counts[word] = counts[word] + 1;
+			   var tempObject;
+			   arrayByDirector.find(x => x.year === word).occurance++;
+		   }
+		   if(counts[word] > compare){
+				 compare = counts[word];
+				 mostFrequent = thearray[i];
+		   }
+		}
+		var moviesByYearArray = sortArrayObjectsByYear(arrayByDirector);
+		var topFiveMovieYears = getTopFive(moviesByYearArray);
+
+	  return topFiveMovieYears;
+
+
+}
 
 	function createMovieArraysFromElement(rowElement){
 
-		movieTitlesSorted.push(rowElement[5]);
+		//movieTitlesSorted.push(rowElement[5]);
 		movieYearsSorted.push(rowElement[10]);
+		movieDirectorsSorted.push(rowElement[14]);
+
+		debugger;
 	}
 
 	function sortArrayObjectsByYear(arrayOfObjects){
@@ -130,7 +171,52 @@ function findTopFiveMovieYears(thearray){
 		labelSet.push(theData[i].year);
 	}
 
-		var ctx = document.getElementById('myChart').getContext('2d');
+		var ctx = document.getElementById('yearChart').getContext('2d');
+
+
+				theDataStructure = {
+					datasets: [{
+						data: dataSet,
+						backgroundColor: [
+						"rgb(221,160,221",
+						"rgb(255,0,255)",
+						"rgb(138,43,226)",
+						"rgb(139,0,139)",
+						"rgb(75,0,130)",
+					]
+					}],
+
+					// These labels appear in the legend and in the tooltips when hovering different arcs
+					labels: labelSet,
+
+				};
+
+
+		var chart = new Chart(ctx, {
+			// The type of chart we want to create
+			type: 'pie',
+
+			// The data for our dataset
+			data: theDataStructure,
+
+			// Configuration options go here
+			options: {
+				maintainAspectRatio : false
+
+			}
+		});
+	}
+
+	function createPieChartByDirector(theData){
+	var dataSet = [];
+	var labelSet = [];
+
+	for (i = 0; i < theData.length; i++) {
+		dataSet.push(theData[i].occurance);
+		labelSet.push(theData[i].year);
+	}
+
+		var ctx = document.getElementById('directorChart').getContext('2d');
 
 
 				theDataStructure = {
@@ -171,8 +257,45 @@ function findTopFiveMovieYears(thearray){
 		return arrayToFilter.slice(Math.max(arrayToFilter.length - 5, 1));
 	}
 
-	function createYearOverview(arrayOfMoviesByYear){
-		createPieChartByYear(arrayOfMoviesByYear);
+	function createYearOverview(){
+		$('#firstRowData').show();
+		createPieChartByYear(topMoviesByYear);
+		createPieChartByDirector(topMoviesByDirector);
+
+	}
+
+	function readMovieFile(importedFile){
+		//TODO : Read has to be changed
+		var movieListAsString = importedFile;
+		var movieListAsArray = movieListAsString.split("\n");
+		var amountOfMovies = movieListAsArray.length-1;
+		movieListLength = amountOfMovies;
+
+		for (i = 1; i < amountOfMovies; i++) {
+			var movieRow = movieListAsArray[i].split(",");
+			debugger;
+			createMovieArraysFromElement(movieRow);
+			var imdbId = movieRow[1];
+			var movieTitle = movieRow[5];
+		}
+	}
+
+	function readMovieFileAlt(importedFile){
+
+		var movieListAsString = importedFile;
+		var movieListAsArray = movieListAsString.split("\n");
+		var amountOfMovies = movieListAsArray.length-1;
+
+		movieListLength = amountOfMovies;
+
+		for (i = 1; i < amountOfMovies; i++) {
+			var arr = movieListAsArray[i].match(/(("[^"]*")|[^,]+)|(?=,(,|$))/g);
+			arr = arr || [];
+			createMovieArraysFromElement(arr);
+		}
+
+
+
 	}
 
 
