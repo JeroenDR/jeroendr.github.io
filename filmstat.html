@@ -17,10 +17,10 @@
   </a>
   <ul class="navbar-nav">
   <li class="nav-item">
-      <a class="nav-link" href="index.html">Home</a>
+      <a class="nav-link" href="index.html">Résumé</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="#">LocationScout</a>
+      <a class="nav-link" href="movielocindex.html">LocationScout</a>
     </li>
 	</li>
 	  <li class="nav-item">
@@ -47,6 +47,12 @@
 				<canvas id="directorChart"></canvas>
 			</div>
 		</div>
+		<div class="row" id="secondRowData" style="display:none">
+			<div class="col">
+				<h3>Amount of movies seen from AFI's Top 100:<h3>
+				<p id="amountOfAFI"></p>
+			</div>
+		</div>
 	</div>
 </div>
 <script>
@@ -55,9 +61,21 @@ var movieListLength = 0;
 var movieTitlesSorted = [];
 var movieYearsSorted = [];
 var movieDirectorsSorted = [];
+var myAFIMovies = [];
 
 var topMoviesByYear;
 var topMoviesByDirector;
+var AFITop100 = ["Citizen Kane","The Godfather","Casablanca","Raging Bull","Singin' in the Rain","Gone with the Wind","Lawrence of Arabia","Schindler's List","Vertigo"
+,"The Wizard of Oz","City Lights","The Searchers","Star Wars","Psycho","2001: A Space Odyssey","Sunset Boulevard","The Graduate","The General","On the Waterfront","It's a Wonderful Life"
+,"Chinatown","Some Like It Hot","The Grapes of Wrath","E.T. the Extra-Terrestrial","To Kill a Mockingbird","Mr. Smith Goes to Washington","High Noon","All About Eve","Double Indemnity","Apocalypse Now"
+,"The Maltese Falcon","The Godfather Part II","One Flew Over the Cuckoo's Nest","Snow White and the Seven Dwarfs","Annie Hall","The Bridge on the River Kwai","The Best Years of Our Lives"
+,"The Treasure of the Sierra Madre","Dr. Strangelove","The Sound of Music","King Kong","Bonnie and Clyde","Midnight Cowboy","The Philadelphia Story","Shane","It Happened One Night","A Streetcar Named Desire"
+,"Rear Window","Intolerance","The Lord of the Rings: The Fellowship of the Ring","West Side Story","Taxi Driver","The Deer Hunter","MASH","North by Northwest","Jaws","Rocky","The Gold Rush","Nashville"
+,"Duck Soup","Sullivan's Travels","American Graffiti","Cabaret","Network","The African Queen","Raiders of the Lost Ark","Who's Afraid of Virginia Woolf?","Unforgiven","Tootsie","A Clockwork Orange"
+,"Saving Private Ryan","The Shawshank Redemption","Butch Cassidy and the Sundance Kid","The Silence of the Lambs","In the Heat of the Night","Forrest Gump","All the President's Men","Modern Times"
+,"The Wild Bunch","The Apartment","Spartacus","Sunrise: A Song of Two Humans","Titanic","Easy Rider","A Night at the Opera","Platoon","12 Angry Men","Bringing Up Baby","The Sixth Sense","Swing Time"
+,"Sophie's Choice","Goodfellas","The French Connection","Pulp Fiction","The Last Picture Show","Do the Right Thing","Blade Runner","Yankee Doodle Dandy","Toy Story","Ben-Hur"
+];
 
 // uploadList listener
 $("#uploadList").change(function() {
@@ -66,7 +84,7 @@ $("#uploadList").change(function() {
 	//add fileReader by row
   reader.addEventListener('load', function() {
 
-		readMovieFileAlt(this.result);
+		readMovieFile(this.result);
 		topMoviesByYear = findTopFiveMovieYears(movieYearsSorted);
 		topMoviesByDirector = findTopFiveMovieDirectors(movieDirectorsSorted);
 		createYearOverview();
@@ -145,7 +163,6 @@ function findTopFiveMovieDirectors(thearray){
 		movieYearsSorted.push(rowElement[10]);
 		movieDirectorsSorted.push(rowElement[14]);
 
-		debugger;
 	}
 
 	function sortArrayObjectsByYear(arrayOfObjects){
@@ -259,8 +276,10 @@ function findTopFiveMovieDirectors(thearray){
 
 	function createYearOverview(){
 		$('#firstRowData').show();
+		$('#secondRowData').show();
 		createPieChartByYear(topMoviesByYear);
 		createPieChartByDirector(topMoviesByDirector);
+		document.getElementById("amountOfAFI").innerHTML = myAFIMovies.length;
 
 	}
 
@@ -273,11 +292,19 @@ function findTopFiveMovieDirectors(thearray){
 
 		for (i = 1; i < amountOfMovies; i++) {
 			var movieRow = movieListAsArray[i].split(",");
-			debugger;
 			createMovieArraysFromElement(movieRow);
 			var imdbId = movieRow[1];
 			var movieTitle = movieRow[5];
+			isThisAFI(movieTitle);
 		}
+	}
+
+	function isThisAFI(movieTitle){
+		debugger;
+		if(AFITop100.includes(movieTitle)){
+			myAFIMovies.push(movieTitle);
+		}
+
 	}
 
 	function readMovieFileAlt(importedFile){
@@ -297,6 +324,8 @@ function findTopFiveMovieDirectors(thearray){
 
 
 	}
+
+
 
 
 </script>
