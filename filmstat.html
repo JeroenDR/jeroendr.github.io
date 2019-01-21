@@ -38,11 +38,16 @@
 	<div class="container">
 		<div class="row">
 			<div class="col">
-				<h3>Upload your IMDb or Letterboxd list</h3>
+				<h3>Upload your IMDb list</h3>
 				<input type="file" id="uploadList">
 				<pre id="file"></pre>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col">
+			<button disabled onclick="sampleListIMDB()">Give me a sample IMDB list to test</button>
+		</div>
+	  </div>
 		<div class="row" id="firstRowData" style="display:none">
 			<div class="col">
 				<h3>By year<h3>
@@ -55,8 +60,25 @@
 		</div>
 		<div class="row" id="secondRowData" style="display:none">
 			<div class="col">
+				<h3>By genre<h3>
+				<canvas id="genreChart"></canvas>
+			</div>
+		</div>
+		<div class="row" id="thirdRowData" style="display:none">
+			<div class="col">
 				<h3>Amount of movies seen from AFI's Top 100:<h3>
 				<p id="amountOfAFI"></p>
+
+					 <button style=" border: none;padding: 0;background: none;">
+						 <img id="afiToolTip" data-toggle="tooltip" title="" src="images/info.png" alt="Info" style="width:30px;height:30px;">
+					 </button>
+			</div>
+			<div class="col">
+				<h3>Amount of Best Picture winners:<h3>
+				<p id="amountOfBestPicture"></p>
+				<button style=" border: none;padding: 0;background: none;">
+					<img id="bestpicToolTip" data-toggle="tooltip" title="" src="images/info.png" alt="Info" style="width:30px;height:30px;">
+				</button>
 			</div>
 		</div>
 	</div>
@@ -64,13 +86,16 @@
 <script>
 //Global variables
 var movieListLength = 0;
-var movieTitlesSorted = [];
-var movieYearsSorted = [];
-var movieDirectorsSorted = [];
+var movieTitlesUnSorted = [];
+var movieYearsUnSorted = [];
+var movieDirectorsUnSorted = [];
+var movieGenresUnSorted = [];
 var myAFIMovies = [];
+var myBestPictureMovies = [];
 
 var topMoviesByYear;
 var topMoviesByDirector;
+var topMoviesByGenre;
 var AFITop100 = ["Citizen Kane","The Godfather","Casablanca","Raging Bull","Singin' in the Rain","Gone with the Wind","Lawrence of Arabia","Schindler's List","Vertigo"
 ,"The Wizard of Oz","City Lights","The Searchers","Star Wars","Psycho","2001: A Space Odyssey","Sunset Boulevard","The Graduate","The General","On the Waterfront","It's a Wonderful Life"
 ,"Chinatown","Some Like It Hot","The Grapes of Wrath","E.T. the Extra-Terrestrial","To Kill a Mockingbird","Mr. Smith Goes to Washington","High Noon","All About Eve","Double Indemnity","Apocalypse Now"
@@ -83,6 +108,15 @@ var AFITop100 = ["Citizen Kane","The Godfather","Casablanca","Raging Bull","Sing
 ,"Sophie's Choice","Goodfellas","The French Connection","Pulp Fiction","The Last Picture Show","Do the Right Thing","Blade Runner","Yankee Doodle Dandy","Toy Story","Ben-Hur"
 ];
 
+var academyBestPictures = ["Wings", "The Broadway Melody", "All Quiet on the Western Front", "Cimarron", "Grand Hotel", "Cavalcade", "It Happened One Night", "Mutiny on the Bounty", "The Great Ziegfeld", "The Life of Emile Zola", "You Can't Take It with You",
+"Gone with the Wind", "Rebecca", "How Green Was My Valley", "Mrs. Miniver", "Casablanca", "Going My Way", "The Lost Weekend", "The Best Years of Our Lives", "Gentleman's Agreement", "Hamlet", "All the King's Men", "All About Eve", "An American in Paris",
+"The Greatest Show on Earth", "From Here to Eternity", "On the Waterfront", "Marty", "Around the World in 80 Days", "The Bridge on the River Kwai", "Gigi", "Ben-Hur", "The Apartment", "West Side Story", "Lawrence of Arabia", "Tom Jones", "My Fair Lady",
+"The Sound of Music", "A Man for All Seasons", "In the Heat of the Night", "Oliver!", "Midnight Cowboy", "Patton", "The French Connection", "The Godfather", "The Sting", "The Godfather Part II", "One Flew Over the Cuckoo's Nest", "Rocky",
+"Annie Hall", "The Deer Hunter", "Kramer vs. Kramer", "Ordinary People", "Chariots of Fire", "Gandhi", "Terms of Endearment", "Amadeus", "Out of Africa", "Platoon", "The Last Emperor" , "Rain Man", "Driving Miss Daisy", "Dances with Wolves",
+"The Silence of the Lambs", "Unforgiven", "Schindler's List", "Forrest Gump", "Braveheart", "The English Patient", "Titanic", "Shakespeare in Love", "American Beauty", "Gladiator", "A Beautiful Mind", "Chicago", "The Lord of the Rings: The Return of the King",
+"Million Dollar Baby", "Crash", "The Departed", "No Country for Old Men", "Slumdog Millionaire", "The Hurt Locker", "The King's Speech", "The Artist", "Argo", "12 Years a Slave", "Birdman or (The Unexpected Virtue of Ignorance)",
+"Spotlight", "Moonlight", "The Shape of Water"];
+
 // uploadList listener
 $("#uploadList").change(function() {
 	var reader = new FileReader();
@@ -90,14 +124,26 @@ $("#uploadList").change(function() {
 	//add fileReader by row
   reader.addEventListener('load', function() {
 
+		//create arrays with raw data unsorted and establish movie lists
 		readMovieFile(this.result);
-		topMoviesByYear = findTopFiveMovieYears(movieYearsSorted);
-		topMoviesByDirector = findTopFiveMovieDirectors(movieDirectorsSorted);
+
+		//process unsorted lists
+		debugger;
+		topMoviesByYear = findTopFiveByCriteria(movieYearsUnSorted);
+		//topMoviesByDirector = findTopFiveMovieDirectors(movieDirectorsUnSorted);
+		debugger;
+
+		topMoviesByDirector = findTopFiveByCriteria(movieDirectorsUnSorted);
+		topMoviesByGenre = findTopFiveByCriteria(movieGenresUnSorted);
 		createYearOverview();
   });
   reader.readAsText(document.querySelector('input').files[0]);
 });
 
+function sampleListIMDB(){
+
+
+}
 function findTopFiveMovieYears(thearray){
 	var counts = {};
 	var arrayByYear = [];
@@ -130,9 +176,10 @@ function findTopFiveMovieYears(thearray){
 
 
 }
-function findTopFiveMovieDirectors(thearray){
+
+function findTopFiveByCriteria(thearray){
 	var counts = {};
-	var arrayByDirector = [];
+	var arrayByCriteria = [];
 	var compare = 0;
 	var mostFrequent;
 
@@ -142,38 +189,39 @@ function findTopFiveMovieDirectors(thearray){
 		   if(counts[word] === undefined){
 			   counts[word] = 1;
 			   var tempObject = {};
-			   tempObject.year = word;
+			   tempObject.criteria = word;
 			   tempObject.occurance = 1;
-			   arrayByDirector.push(tempObject);
+			   arrayByCriteria.push(tempObject);
 		   }else{
 			   counts[word] = counts[word] + 1;
 			   var tempObject;
-			   arrayByDirector.find(x => x.year === word).occurance++;
+			   arrayByCriteria.find(x => x.criteria === word).occurance++;
 		   }
 		   if(counts[word] > compare){
 				 compare = counts[word];
 				 mostFrequent = thearray[i];
 		   }
 		}
-		var moviesByYearArray = sortArrayObjectsByYear(arrayByDirector);
-		var topFiveMovieYears = getTopFive(moviesByYearArray);
+		var moviesByCriteriaArray = sortArrayObjectsByYear(arrayByCriteria);
+		var topFiveMovieByCriteria = getTopFive(moviesByCriteriaArray);
 
-	  return topFiveMovieYears;
+	  return topFiveMovieByCriteria;
 
 
 }
 
+
 	function createMovieArraysFromElement(rowElement){
 
-		//movieTitlesSorted.push(rowElement[5]);
-		movieYearsSorted.push(rowElement[10]);
-		movieDirectorsSorted.push(rowElement[14]);
+		movieTitlesUnSorted.push(rowElement[4]);
+		movieYearsUnSorted.push(rowElement[9]);
+		movieGenresUnSorted.push(rowElement[10]);
+		movieDirectorsUnSorted.push(rowElement[13]);
+		debugger;
 
 	}
 
 	function sortArrayObjectsByYear(arrayOfObjects){
-
-
 			return arrayOfObjects.sort(compareObjects);
 	}
 
@@ -185,74 +233,42 @@ function findTopFiveMovieDirectors(thearray){
 			  return 0;
 			}
 
-	function createPieChartByYear(theData){
+
+//array,'yearChart'
+	function createPieChart(theData, htmlname){
 	var dataSet = [];
 	var labelSet = [];
 
 	for (i = 0; i < theData.length; i++) {
 		dataSet.push(theData[i].occurance);
-		labelSet.push(theData[i].year);
+		labelSet.push(theData[i].criteria);
 	}
 
-		var ctx = document.getElementById('yearChart').getContext('2d');
+		var ctx = document.getElementById(htmlname).getContext('2d');
 
 
-				theDataStructure = {
+			/*	theDataStructure = {
 					datasets: [{
 						data: dataSet,
 						backgroundColor: [
-						"rgb(221,160,221",
+						"rgb(221,160,221)",
 						"rgb(255,0,255)",
 						"rgb(138,43,226)",
 						"rgb(139,0,139)",
 						"rgb(75,0,130)",
 					]
-					}],
-
-					// These labels appear in the legend and in the tooltips when hovering different arcs
-					labels: labelSet,
-
-				};
-
-
-		var chart = new Chart(ctx, {
-			// The type of chart we want to create
-			type: 'pie',
-
-			// The data for our dataset
-			data: theDataStructure,
-
-			// Configuration options go here
-			options: {
-				maintainAspectRatio : false
-
-			}
-		});
-	}
-
-	function createPieChartByDirector(theData){
-	var dataSet = [];
-	var labelSet = [];
-
-	for (i = 0; i < theData.length; i++) {
-		dataSet.push(theData[i].occurance);
-		labelSet.push(theData[i].year);
-	}
-
-		var ctx = document.getElementById('directorChart').getContext('2d');
-
-
+				}],*/
 				theDataStructure = {
 					datasets: [{
 						data: dataSet,
 						backgroundColor: [
-						"rgb(221,160,221",
-						"rgb(255,0,255)",
-						"rgb(138,43,226)",
-						"rgb(139,0,139)",
-						"rgb(75,0,130)",
+						"rgb(50,48,49)",
+						"rgb(61,59,60)",
+						"rgb(127,121,121)",
+						"rgb(193,189,179)",
+						"rgb(95,91,107)",
 					]
-					}],
+				}],
 
 					// These labels appear in the legend and in the tooltips when hovering different arcs
 					labels: labelSet,
@@ -283,9 +299,20 @@ function findTopFiveMovieDirectors(thearray){
 	function createYearOverview(){
 		$('#firstRowData').show();
 		$('#secondRowData').show();
-		createPieChartByYear(topMoviesByYear);
-		createPieChartByDirector(topMoviesByDirector);
+		$('#thirdRowData').show();
+
+		createPieChart(topMoviesByYear,'yearChart');
+		createPieChart(topMoviesByDirector, 'directorChart');
+		createPieChart(topMoviesByGenre, 'genreChart');
+
+
+		debugger;
 		document.getElementById("amountOfAFI").innerHTML = myAFIMovies.length;
+		document.getElementById("amountOfBestPicture").innerHTML = myBestPictureMovies.length + " out of 90";
+
+
+		document.getElementById("afiToolTip").title =  myAFIMovies;
+		document.getElementById("bestpicToolTip").title =  myBestPictureMovies;
 
 	}
 
@@ -297,41 +324,34 @@ function findTopFiveMovieDirectors(thearray){
 		movieListLength = amountOfMovies;
 
 		for (i = 1; i < amountOfMovies; i++) {
-			var movieRow = movieListAsArray[i].split(",");
+
+			//var movieRow = movieListAsArray[i].match(/(".*?"|[^\s",][^",]+[^\s",])(?=\s*,|\s*$)/g);
+			var movieRow = movieListAsArray[i].match(/(".*?"|[^",]+)(?=\s*,|\s*$)/g);
+
 			createMovieArraysFromElement(movieRow);
-			var imdbId = movieRow[1];
-			var movieTitle = movieRow[5];
+			//var imdbId = movieRow[0];
+
+			//processing movie lists here since we are iterating anyway
+			var movieTitle = movieRow[4];
 			isThisAFI(movieTitle);
+			isThisBestPicture(movieTitle);
 		}
 	}
 
 	function isThisAFI(movieTitle){
-		debugger;
 		if(AFITop100.includes(movieTitle)){
 			myAFIMovies.push(movieTitle);
 		}
 
 	}
 
-	function readMovieFileAlt(importedFile){
+	function isThisBestPicture(movieTitle){
 
-		var movieListAsString = importedFile;
-		var movieListAsArray = movieListAsString.split("\n");
-		var amountOfMovies = movieListAsArray.length-1;
-
-		movieListLength = amountOfMovies;
-
-		for (i = 1; i < amountOfMovies; i++) {
-			var arr = movieListAsArray[i].match(/(("[^"]*")|[^,]+)|(?=,(,|$))/g);
-			arr = arr || [];
-			createMovieArraysFromElement(arr);
+		if(academyBestPictures.includes(movieTitle)){
+			myBestPictureMovies.push(movieTitle);
 		}
 
-
-
 	}
-
-
 
 
 </script>
