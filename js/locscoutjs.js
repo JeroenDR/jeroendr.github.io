@@ -20,7 +20,7 @@
     })
   });
 */
-mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxZmN4cjZoMGJtZjNvbnJ4am1zeDUxMCJ9.L3kQnc_CZ6M6YsIEOwyzpg';
+mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxZmY0cWUxMHQ3ZjNscW84NWwzczJ3cyJ9.gJoTbx5cZAq5HBEqZdVwYw';
 
 var map = new mapboxgl.Map({
   container: 'map',
