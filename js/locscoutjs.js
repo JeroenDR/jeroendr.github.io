@@ -20,9 +20,9 @@
     })
   });
 */
-mapbox.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxZmN4cjZoMGJtZjNvbnJ4am1zeDUxMCJ9.L3kQnc_CZ6M6YsIEOwyzpg';
+mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxZmN4cjZoMGJtZjNvbnJ4am1zeDUxMCJ9.L3kQnc_CZ6M6YsIEOwyzpg';
 
-var map = new mapbox.Map({
+var map = new mapboxgl.Map({
   container: 'map',
   //style: 'mapbox://styles/mapbox/dark-v10',
   style: 'mapbox://styles/jeroendr/cjzfznutc1osh1cq5qeciw1zr',
