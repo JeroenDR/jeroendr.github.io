@@ -56,3 +56,11 @@ html body{
 .pull-right {
     float: right !important; // Use of important emulates bootstrap
 }
+
+.nowcol{
+  margin-top:10px;
+	border: #cdcdcd medium solid;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
