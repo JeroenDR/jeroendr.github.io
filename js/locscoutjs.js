@@ -1,5 +1,5 @@
 mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxdmgzaW40MGgwYTNjcDUyMG45ODI5cyJ9.tyU7MRdx8PZ_ZGnSbe3MEw';
-
+var isSidePanelOpen = false;
 
 $(window).on('load',function(){
         $('#splashModal').modal('show');
@@ -43,6 +43,7 @@ function openNav() {
     $("#closebtn").html("v");
   }
   document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+  isSidePanelOpen = true;
 }
 
 function closeNav() {
@@ -56,6 +57,42 @@ function closeNav() {
     document.getElementById("map").style.marginBottom= "0";
     document.body.style.backgroundColor = "white";
   }
+  isSidePanelOpen = false;
+  $("#activeMarker").remove();
+}
+
+function populateSidePanel(feature){
+  //Check if single movie or location bookmark
+  if(feature.properties.features == undefined){
+    //single movie
+    $("#movieTitle").html(feature.properties.title);
+    $("#movieSceneDescription").html(feature.properties.description);
+
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: "http://www.omdbapi.com/?t=" + feature.properties.title + "&apikey=8a173d11",
+      success: function(data){
+          $("#moviePoster").attr("src",data.Poster);
+          $("#movieDescription").html(data.Plot);
+      },
+      async:false,
+      error: function() {
+          debugger;
+      }
+  });
+  }else{
+    //multi movie location
+    debugger;
+    var movieListForLocation = JSON.parse(feature.properties.features);
+    var locationName = movieListForLocation[0].description.substr(0, movieListForLocation[0].description.indexOf('-')-1);
+    $("#locationTitle").html(locationName);
+
+
+  }
+
+
+//  var results //http://www.omdbapi.com/?apikey=[yourkey]&
 }
 
 map.on('click', function(e) {
@@ -69,9 +106,31 @@ map.on('click', function(e) {
   }
 
   var feature = features[0];
-openNav();
-$("#movieTitle").html(feature.properties.title);
-$("#movieDescription").html(feature.properties.description);
+
+  if(isSidePanelOpen){
+    $("#activeMarker").remove();
+  }
+
+  var el = document.createElement('div');
+    el.className = 'marker';
+    el.id = 'activeMarker';
+
+  new mapboxgl.Marker(el)
+    .setLngLat(feature.geometry.coordinates)
+    .addTo(map);
+
+  openNav();
+  debugger;
+  populateSidePanel(feature);
+
+  /*  this.setIcon(
+        e.mapbox.marker.icon({
+            'marker-color': 'red'
+        })
+    );*/
+
+
+
 //$("headerInfo").val();
 /*  var popup = new mapboxgl.Popup({ offset: [0, -15] })
     .setLngLat(feature.geometry.coordinates)
