@@ -60,32 +60,52 @@ function closeNav() {
   isSidePanelOpen = false;
   $("#activeMarker").remove();
 }
+function addMoviePanelToAccordion(){
+  var $template = $(".template");
+  var hash = 2;
 
+    var $newPanel = $template.clone();
+    $newPanel.find(".collapse").removeClass("in");
+    $newPanel.find(".accordion-toggle").attr("href",  "#" + (++hash))
+             .text("Dynamic panel #" + hash);
+    $newPanel.find(".panel-collapse").attr("id", hash).addClass("collapse").removeClass("in");
+    $("#accordion").append($newPanel.fadeIn());
+}
 function populateSidePanel(feature){
   //Check if single movie or location bookmark
+
+  //always open first accordion \
+  if(!$('#movieCollapseOne').hasClass("show")) {
+  $('#movieCollapseOne').collapse('toggle');
+}
   if(feature.properties.features == undefined){
+
     //single movie
+    $('#locationTitle').hide();
+    $('#moviePanelTwo').hide();
     $("#movieTitle").html(feature.properties.title);
     $("#movieSceneDescription").html(feature.properties.description);
 
-    $.ajax({
-      type: "GET",
-      dataType: "json",
-      url: "http://www.omdbapi.com/?t=" + feature.properties.title + "&apikey=8a173d11",
-      success: function(data){
-          $("#moviePoster").attr("src",data.Poster);
-          $("#movieDescription").html(data.Plot);
-      },
-      async:false,
-      error: function() {
-          debugger;
-      }
-  });
+    omdbCall(feature.properties.title, 0);
   }else{
     //multi movie location
-    debugger;
     var movieListForLocation = JSON.parse(feature.properties.features);
     var locationName = movieListForLocation[0].description.substr(0, movieListForLocation[0].description.indexOf('-')-1);
+    $('#moviePanelTwo').show();
+    //  $("#locationTitle").css("display : block");
+    if(movieListForLocation.length==2){
+      $("#movieTitle").html(movieListForLocation[0].title);
+      $("#movieSceneDescription").html(movieListForLocation[0].description);
+      $("#movieTitle2").html(movieListForLocation[1].title);
+      $("#movieSceneDescription2").html(movieListForLocation[1].description);
+
+      omdbCall(movieListForLocation[0].title, 0);
+       omdbCall(movieListForLocation[1].title, 1);
+
+    }else{
+
+    }
+    $('#locationTitle').show();
     $("#locationTitle").html(locationName);
 
 
@@ -94,6 +114,35 @@ function populateSidePanel(feature){
 
 //  var results //http://www.omdbapi.com/?apikey=[yourkey]&
 }
+function omdbCall(title, index){
+
+  $.ajax({
+    type: "GET",
+    dataType: "json",
+    url: "http://www.omdbapi.com/?t=" + title + "&apikey=8a173d11",
+    success: function(data){
+      omdbCallCallBack(data, index);
+
+    },
+    async:false,
+    error: function() {
+        return null;
+    }
+  });
+
+}
+
+function omdbCallCallBack(data, index){
+  if(index == 0){
+    $("#moviePoster").attr("src",data.Poster);
+    $("#movieDescription").html(data.Plot);
+  }else{
+    $("#moviePoster2").attr("src",data.Poster);
+    $("#movieDescription2").html(data.Plot);
+  }
+
+}
+
 
 map.on('click', function(e) {
 
@@ -120,7 +169,6 @@ map.on('click', function(e) {
     .addTo(map);
 
   openNav();
-  debugger;
   populateSidePanel(feature);
 
   /*  this.setIcon(
