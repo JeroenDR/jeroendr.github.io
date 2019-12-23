@@ -1,4 +1,5 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxdmgzaW40MGgwYTNjcDUyMG45ODI5cyJ9.tyU7MRdx8PZ_ZGnSbe3MEw';
+//mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxdmgzaW40MGgwYTNjcDUyMG45ODI5cyJ9.tyU7MRdx8PZ_ZGnSbe3MEw';
+mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2p2MDEwd24yMWV3MjQ5czAxZDVhdWhqcCJ9.4HxJG9fTYYTDUqsWsYYGLA'
 var isSidePanelOpen = false;
 
 $(window).on('load',function(){

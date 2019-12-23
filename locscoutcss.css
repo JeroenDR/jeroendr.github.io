@@ -50,15 +50,13 @@
 
       .movieDescription{
         color:grey;
-        width: 70%;
-        float:right;
       }
 
       .moviePoster{
         width: auto;
         height: 100%;
         max-height: 20vh;
-        float:left;
+        float : left;
       }
 
       hr{
