@@ -31,8 +31,8 @@
         position: absolute;
         padding: 0px 0px 0px 0px;
         top: 0px;
-        right: 25px;
-        font-size: 36px;
+        right: 10px;
+        font-size: 32px;
       }
 
       .movieTitle{
@@ -50,6 +50,7 @@
 
       .movieDescription{
         color:grey;
+        padding-left: 5px;
       }
 
       .moviePoster{
@@ -95,4 +96,32 @@
 .accordion-toggle{
   color:white;
   margin-left : 0;
+}
+
+.sidePanelLandscape{
+  border-right : 3px solid grey;
+}
+
+.sidePanelLandscapeOpen{
+  width : 25%;
+  height : 100%;
+}
+
+.sidePanelLandscapeCollapsed{
+  width : 0%;
+  height : 100%;
+}
+
+.sidePanelPortrait{
+    border-top : 3px solid grey;
+}
+
+.sidePanelPortraitOpen{
+    width : 100%;
+    height : 25%;
+}
+
+.sidePanelPortraitCollapsed{
+  width : 100%;
+  height : 0%;
 }

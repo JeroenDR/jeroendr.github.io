@@ -1,5 +1,4 @@
-//mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxdmgzaW40MGgwYTNjcDUyMG45ODI5cyJ9.tyU7MRdx8PZ_ZGnSbe3MEw';
-mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2p2MDEwd24yMWV3MjQ5czAxZDVhdWhqcCJ9.4HxJG9fTYYTDUqsWsYYGLA'
+mapboxgl.accessToken = 'pk.eyJ1IjoiamVyb2VuZHIiLCJhIjoiY2sxdmgzaW40MGgwYTNjcDUyMG45ODI5cyJ9.tyU7MRdx8PZ_ZGnSbe3MEw';
 var isSidePanelOpen = false;
 
 $(window).on('load',function(){
@@ -21,6 +20,8 @@ enableHighAccuracy: true
 trackUserLocation: true
 }));
 
+map.addControl(new mapboxgl.NavigationControl());
+
 function isWideScreen() {
    if(window.innerWidth >= 800) {
      return true;
@@ -32,13 +33,14 @@ function isWideScreen() {
 function openNav() {
   if(isWideScreen()){
 
-    $("#detailPanel").width("25%");
-    $("#detailPanel").height("100%");
-    $("#map").css("marginLeft = 25%");
+    $("#detailPanel").addClass("sidePanelLandscapeOpen");
+    $("#detailPanel").removeClass("sidePanelLandscapeCollapsed");
+    $("#detailPanel").addClass("sidePanelLandscape");
     $("#closebtn").html("<");
   }else{
-    $("#detailPanel").height("25%");
-    $("#detailPanel").width("100%");
+    $("#detailPanel").addClass("sidePanelPortraitOpen");
+    $("#detailPanel").removeClass("sidePanelPortraitCollapsed");
+    $("#detailPanel").addClass("sidePanelPortrait");
     $("#detailPanel").css({'bottom' : '0'});
     $("#map").css({'marginBottom' : "25%"});
     $("#closebtn").html("v");
@@ -50,13 +52,11 @@ function openNav() {
 function closeNav() {
   //TODO: cleanup with jquery
   if(isWideScreen()){
-    document.getElementById("detailPanel").style.width = "0";
-    document.getElementById("map").style.marginLeft= "0";
-    document.body.style.backgroundColor = "white";
+    $("#detailPanel").addClass("sidePanelLandscapeCollapsed");
+    $("#detailPanel").removeClass("sidePanelLandscapeOpen");
   }else{
-    document.getElementById("detailPanel").style.height = "0";
-    document.getElementById("map").style.marginBottom= "0";
-    document.body.style.backgroundColor = "white";
+    $("#detailPanel").addClass("sidePanelPortraitCollapsed");
+    $("#detailPanel").removeClass("sidePanelPortraitOpen");
   }
   isSidePanelOpen = false;
   $("#activeMarker").remove();
