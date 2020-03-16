@@ -1,3 +1,9 @@
+body{
+
+  overflow-x: hidden; /* Disable horizontal scroll */
+  overflow-y: hidden; /* Disable horizontal scroll */
+}
+
 .map {
 
         height: 100vh
@@ -14,7 +20,7 @@
         position: fixed; /* Stay in place */
         z-index: 1; /* Stay on top */
         background-color: #111; /* Black*/
-        overflow-x: hidden; /* Disable horizontal scroll */
+        overflow-y: auto; /* Disable horizontal scroll */
         transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
       }
 
@@ -99,11 +105,11 @@
 }
 
 .sidePanelLandscape{
-  border-right : 3px solid grey;
+  border-right : 1em solid grey;
 }
 
 .sidePanelLandscapeOpen{
-  width : 25%;
+  width : 33%;
   height : 100%;
 }
 
@@ -113,15 +119,45 @@
 }
 
 .sidePanelPortrait{
-    border-top : 3px solid grey;
+    border-top : 1em solid grey;
 }
 
 .sidePanelPortraitOpen{
     width : 100%;
-    height : 25%;
+    height : 33%;
 }
 
 .sidePanelPortraitCollapsed{
   width : 100%;
   height : 0%;
+}
+
+.collapseBtnPortrait{
+  border : none;
+  background-color: black;
+  color : white;
+  font-weight: bold;
+  float : none;
+  width : 100%;
+}
+
+.collapseBtnLandscape{
+  border : none;
+  background-color: black;
+  color : white;
+  font-weight: bold;
+  float : right;
+  height : 100%;
+}
+
+.detailPanelContainer{
+  overflow-x: hidden; /* Disable horizontal scroll */
+  overflow-y: auto; /* Disable horizontal scroll */
+}
+
+.collapseBtn{
+  position : sticky;
+  top:0;
+  z-index:1;
+  display: inline;
 }

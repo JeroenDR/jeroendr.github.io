@@ -16,8 +16,12 @@
 <body>
 
 <div>
+
 	<div id="detailPanel" class="sidenav">
-		<a href="javascript:void(0)" class="closebtn" id="closebtn" onclick="closeNav()"></a>
+		<button id="collapseBtn" onclick="closeNav()" class="collapseBtn"></button>
+
+		<div id="detailPanelContainer" class="detailPanelContainer">
+	<!-- <a href="javascript:void(0)" class="closebtn" id="closebtn" onclick="closeNav()"></a> -->
 		<h3 id="locationTitle" class="movieTitle"></h3>
 		<div class="panel-group accordionPanelMain" id="accordion">
   <div class="panel panel-default template">
@@ -88,6 +92,7 @@
 		</div>
 	</div>
 
+</div>
 </div>
 	</div>
 

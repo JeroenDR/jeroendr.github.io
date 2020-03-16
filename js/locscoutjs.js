@@ -34,15 +34,22 @@ function openNav() {
 
     $("#detailPanel").addClass("sidePanelLandscapeOpen");
     $("#detailPanel").removeClass("sidePanelLandscapeCollapsed");
-    $("#detailPanel").addClass("sidePanelLandscape");
-    $("#closebtn").html("<");
+  //  $("#detailPanel").addClass("sidePanelLandscape");
+    //$("#closebtn").html("<");
+    $("#collapseBtn").html("<");
+    $("#collapseBtn").removeClass("collapseBtnPortrait");
+    $("#collapseBtn").addClass("collapseBtnLandscape");
   }else{
     $("#detailPanel").addClass("sidePanelPortraitOpen");
     $("#detailPanel").removeClass("sidePanelPortraitCollapsed");
-    $("#detailPanel").addClass("sidePanelPortrait");
+  //  $("#detailPanel").addClass("sidePanelPortrait");
     $("#detailPanel").css({'bottom' : '0'});
     $("#map").css({'marginBottom' : "25%"});
-    $("#closebtn").html("v");
+  //  $("#closebtn").html("v");
+    $("#collapseBtn").html("v");
+    $("#collapseBtn").removeClass("collapseBtnLandscape");
+    $("#collapseBtn").addClass("collapseBtnPortrait");
+
   }
   document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
   isSidePanelOpen = true;
