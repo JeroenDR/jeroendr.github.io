@@ -1,26 +1,32 @@
+//Global Variables
 var isSidePanelOpen = false;
 
+//How To Screen
 $(window).on('load',function(){
         $('#splashModal').modal('show');
     });
 
+//MapBox settings
 var map = new mapboxgl.Map({
   container: 'map',
-  //style: 'mapbox://styles/mapbox/dark-v10',
   style: 'mapbox://styles/jeroendr/cjzfznutc1osh1cq5qeciw1zr',
   center: [-73.999, 40.728],
   zoom: 13
 });
 
 map.addControl(new mapboxgl.GeolocateControl({
-positionOptions: {
-enableHighAccuracy: true
-},
-trackUserLocation: true
+  positionOptions:
+    {
+    enableHighAccuracy: true
+    },
+  trackUserLocation: true
 }));
 
 map.addControl(new mapboxgl.NavigationControl());
 
+//Functions
+
+//detailPanelSizingFunctions
 function isWideScreen() {
    if(window.innerWidth >= 800) {
      return true;
@@ -34,18 +40,14 @@ function openNav() {
 
     $("#detailPanel").addClass("sidePanelLandscapeOpen");
     $("#detailPanel").removeClass("sidePanelLandscapeCollapsed");
-  //  $("#detailPanel").addClass("sidePanelLandscape");
-    //$("#closebtn").html("<");
     $("#collapseBtn").html("<");
     $("#collapseBtn").removeClass("collapseBtnPortrait");
     $("#collapseBtn").addClass("collapseBtnLandscape");
   }else{
     $("#detailPanel").addClass("sidePanelPortraitOpen");
     $("#detailPanel").removeClass("sidePanelPortraitCollapsed");
-  //  $("#detailPanel").addClass("sidePanelPortrait");
     $("#detailPanel").css({'bottom' : '0'});
     $("#map").css({'marginBottom' : "25%"});
-  //  $("#closebtn").html("v");
     $("#collapseBtn").html("v");
     $("#collapseBtn").removeClass("collapseBtnLandscape");
     $("#collapseBtn").addClass("collapseBtnPortrait");
@@ -56,7 +58,6 @@ function openNav() {
 }
 
 function closeNav() {
-  //TODO: cleanup with jquery
   if(isWideScreen()){
     $("#detailPanel").addClass("sidePanelLandscapeCollapsed");
     $("#detailPanel").removeClass("sidePanelLandscapeOpen");
@@ -67,21 +68,11 @@ function closeNav() {
   isSidePanelOpen = false;
   $("#activeMarker").remove();
 }
-function addMoviePanelToAccordion(){
-  var $template = $(".template");
-  var hash = 2;
 
-    var $newPanel = $template.clone();
-    $newPanel.find(".collapse").removeClass("in");
-    $newPanel.find(".accordion-toggle").attr("href",  "#" + (++hash))
-             .text("Dynamic panel #" + hash);
-    $newPanel.find(".panel-collapse").attr("id", hash).addClass("collapse").removeClass("in");
-    $("#accordion").append($newPanel.fadeIn());
-}
 function populateSidePanel(feature){
   //Check if single movie or location bookmark
 
-  //always open first accordion \
+  //always open first accordion
   if(!$('#movieCollapseOne').hasClass("show")) {
   $('#movieCollapseOne').collapse('toggle');
 }
@@ -109,8 +100,6 @@ function populateSidePanel(feature){
       omdbCall(movieListForLocation[0].title, 0);
        omdbCall(movieListForLocation[1].title, 1);
 
-    }else{
-
     }
     $('#locationTitle').show();
     $("#locationTitle").html(locationName);
@@ -118,8 +107,6 @@ function populateSidePanel(feature){
 
   }
 
-
-//  var results //http://www.omdbapi.com/?apikey=[yourkey]&
 }
 function omdbCall(title, index){
 
@@ -150,7 +137,6 @@ function omdbCallCallBack(data, index){
 
 }
 
-
 map.on('click', function(e) {
 
   var features = map.queryRenderedFeatures(e.point, {
@@ -177,18 +163,4 @@ map.on('click', function(e) {
 
   openNav();
   populateSidePanel(feature);
-
-  /*  this.setIcon(
-        e.mapbox.marker.icon({
-            'marker-color': 'red'
-        })
-    );*/
-
-
-
-//$("headerInfo").val();
-/*  var popup = new mapboxgl.Popup({ offset: [0, -15] })
-    .setLngLat(feature.geometry.coordinates)
-    .setHTML('<h3>' + feature.properties.title + '</h3><p>' + feature.properties.description + '</p>')
-    .addTo(map);*/
 });
