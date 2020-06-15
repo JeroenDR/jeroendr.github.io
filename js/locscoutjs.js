@@ -113,10 +113,47 @@ function omdbCall(title, index){
   $.ajax({
     type: "GET",
     dataType: "json",
-    url: "http://www.omdbapi.com/?t=" + title + "&apikey=8a173d11",
+    url: "http://www.omdbapi.com/?t=" + title + "&apikey=" + omdbKey,
     success: function(data){
       omdbCallCallBack(data, index);
 
+    },
+    async:false,
+    error: function() {
+        return null;
+    }
+  });
+
+
+
+}
+
+function themoviedbCall(id, index){
+
+  $.ajax({
+    type: "GET",
+    dataType: "json",
+    url: "https://api.themoviedb.org/3/movie/" + id + "/credits?api_key=" + movieDbKey,
+    success: function(data){
+      if(index==1){
+        $('#castTable tbody').empty();
+      }else{
+        $('#castTable2 tbody').empty();
+      }
+
+       for (i = 0; i < 8; i++) {
+           var newRow = $("<tr>");
+           var cols = "";
+           cols += '<td>' + data.cast[i].character +'</td>';
+           cols += '<td>' + data.cast[i].name +'</td>';
+           newRow.append(cols);
+           if(index==1){
+             $("#castTable").append(newRow);
+           }else{
+             $("#castTable2").append(newRow);
+           }
+
+       }
     },
     async:false,
     error: function() {
@@ -130,9 +167,11 @@ function omdbCallCallBack(data, index){
   if(index == 0){
     $("#moviePoster").attr("src",data.Poster);
     $("#movieDescription").html(data.Plot);
+    themoviedbCall(data.imdbID,1);
   }else{
     $("#moviePoster2").attr("src",data.Poster);
     $("#movieDescription2").html(data.Plot);
+    themoviedbCall(data.imdbID,2);
   }
 
 }
