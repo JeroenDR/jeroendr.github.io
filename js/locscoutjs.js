@@ -1,6 +1,8 @@
 //Global Variables
 var isSidePanelOpen = false;
-
+var dataFromOmDb = null;
+var firstMovieToBeAdded = false;
+var moviesToLoad = [];
 //How To Screen
 $(window).on('load',function(){
         $('#splashModal').modal('show');
@@ -25,7 +27,6 @@ map.addControl(new mapboxgl.GeolocateControl({
 map.addControl(new mapboxgl.NavigationControl());
 
 //Functions
-
 //detailPanelSizingFunctions
 function isWideScreen() {
    if(window.innerWidth >= 800) {
@@ -70,90 +71,136 @@ function closeNav() {
 }
 
 function populateSidePanel(feature){
-  //Check if single movie or location bookmark
+  //flag used to open up only the top moviepanel
+  firstMovieToBeAdded=true;
 
-  //always open first accordion
-  if(!$('#movieCollapseOne').hasClass("show")) {
-  $('#movieCollapseOne').collapse('toggle');
-}
+  //construct movies to be loaded in the side panel, multiple movies at one location are stored different into one JSON object
   if(feature.properties.features == undefined){
-
-    //single movie
-    $('#locationTitle').hide();
-    $('#moviePanelTwo').hide();
-    $("#movieTitle").html(feature.properties.title);
-    $("#movieSceneDescription").html(feature.properties.description);
-
-    omdbCall(feature.properties.title, 0);
+    moviesToLoad.push(feature.properties);
   }else{
-    //multi movie location
     var movieListForLocation = JSON.parse(feature.properties.features);
-    var locationName = movieListForLocation[0].description.substr(0, movieListForLocation[0].description.indexOf('-')-1);
-    $('#moviePanelTwo').show();
-    //  $("#locationTitle").css("display : block");
-    if(movieListForLocation.length==2){
-      $("#movieTitle").html(movieListForLocation[0].title);
-      $("#movieSceneDescription").html(movieListForLocation[0].description);
-      $("#movieTitle2").html(movieListForLocation[1].title);
-      $("#movieSceneDescription2").html(movieListForLocation[1].description);
-
-      omdbCall(movieListForLocation[0].title, 0);
-       omdbCall(movieListForLocation[1].title, 1);
-
-    }
     $('#locationTitle').show();
     $("#locationTitle").html(locationName);
+    var locationName = movieListForLocation[0].description.substr(0, movieListForLocation[0].description.indexOf('-')-1);
 
-
+    for (i = 0; i < movieListForLocation.length; i++)
+    {
+      moviesToLoad.push(movieListForLocation[i]);
+    }
   }
 
+  //data collection call, multiple movies will be added in a recursive way
+  document.getElementById("accordion").innerHTML = "";
+  omdbCall();
+
 }
-function omdbCall(title, index){
+
+function omdbCall(){
 
   $.ajax({
     type: "GET",
     dataType: "json",
-    url: "http://www.omdbapi.com/?t=" + title + "&apikey=" + omdbKey,
+    url: "http://www.omdbapi.com/?t=" + moviesToLoad[0].title + "&apikey=" + omdbKey,
     success: function(data){
-      omdbCallCallBack(data, index);
-
+      dataFromOmDb = data;
+      omdbCallCallBack(data);
     },
     async:false,
     error: function() {
         return null;
     }
   });
-
-
-
 }
 
-function themoviedbCall(id, index){
+function addMovieToSidePanel(dataFromMovieDb){
+  //get main HTML panel
+  var htmlMainSidePanel = document.getElementById("accordion");
+  var staticIdForPanelCount = 0
+  if(moviesToLoad.length>1){
+    staticIdForPanelCount = moviesToLoad.length - (moviesToLoad.length-1);
+  }
+  var staticIdForPanel = "moviePanel" + staticIdForPanelCount;
+  //main movie panel and title
+  var mainMovieContainer = document.createElement("div");
+   mainMovieContainer.setAttribute("class", "panel panel-default template");
+   var htmlStr = '<div class="panel-heading">';
+   htmlStr += '<h4 class="panel-title">';
+   htmlStr += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#' + staticIdForPanel + '"">' + dataFromOmDb.Title +'</a>';
+   htmlStr += '</h4>';
+   htmlStr += '</div>';
 
+    //scene description from mapbox
+    htmlStr += '<div id="' + staticIdForPanel + '" class="panel-collapse collapse' + ((firstMovieToBeAdded) ? " show": "") +'">';
+    htmlStr += '<div class="panel-body">';
+
+    htmlStr += '<h4 class="detailPanelLabel">Scene description</h4>';
+    htmlStr += '<div class="panel panel-default subpanel">';
+    htmlStr += '<div class="panel-body">';
+    htmlStr += '<div class="row">';
+    htmlStr += '<div class="col-sm-12">';
+    htmlStr += '<p class="movieSceneDescription">'+moviesToLoad[0].description + '</p>';
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+
+    htmlStr += '<h4 class="detailPanelLabel">Movie info</h4>';
+    htmlStr += '<div class="panel panel-default subpanel">';
+    htmlStr += '<div class="panel-body">';
+    htmlStr += '<div class="row" >';
+    htmlStr += '<div class="col-sm-12 span4">';
+    htmlStr += '<img src="'+ dataFromOmDb.Poster + '" class="moviePoster">';
+    htmlStr += '<div class="movieDescription">'+ dataFromOmDb.Plot + '</div>';
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+
+    //cast table
+    htmlStr += '<div class="row" >';
+    htmlStr += '<div class="col-sm-12 span4">';
+    htmlStr += '<table class="table table-dark casttable">';
+    htmlStr += '<thead>';
+    htmlStr += '<tr>';
+    htmlStr += '<th scope="col">Character name</th>';
+    htmlStr += '<th scope="col">Played by</th>';
+    htmlStr += '</tr>';
+    htmlStr += '</thead>';
+    htmlStr += '<tbody>';
+    for (i = 0; i < 8; i++)
+    {
+               htmlStr += '<tr>';
+               htmlStr += '<td>' + dataFromMovieDb.cast[i].character +'</td>';
+               htmlStr += '<td>' + dataFromMovieDb.cast[i].name +'</td>';
+    }
+    htmlStr += '</tbody>';
+    htmlStr += '</table>';
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+    htmlStr += '</div>';
+
+    firstMovieToBeAdded = false;
+    mainMovieContainer.innerHTML = htmlStr;
+   htmlMainSidePanel.appendChild(mainMovieContainer)
+
+   //handle multiple movies being loaded
+   moviesToLoad.shift();
+   if(moviesToLoad.length>0){
+     omdbCall();
+   }
+}
+
+function themoviedbCall(id){
   $.ajax({
     type: "GET",
     dataType: "json",
     url: "https://api.themoviedb.org/3/movie/" + id + "/credits?api_key=" + movieDbKey,
     success: function(data){
-      if(index==1){
-        $('#castTable tbody').empty();
-      }else{
-        $('#castTable2 tbody').empty();
-      }
-
-       for (i = 0; i < 8; i++) {
-           var newRow = $("<tr>");
-           var cols = "";
-           cols += '<td>' + data.cast[i].character +'</td>';
-           cols += '<td>' + data.cast[i].name +'</td>';
-           newRow.append(cols);
-           if(index==1){
-             $("#castTable").append(newRow);
-           }else{
-             $("#castTable2").append(newRow);
-           }
-
-       }
+      addMovieToSidePanel(data);
     },
     async:false,
     error: function() {
@@ -163,17 +210,8 @@ function themoviedbCall(id, index){
 
 }
 
-function omdbCallCallBack(data, index){
-  if(index == 0){
-    $("#moviePoster").attr("src",data.Poster);
-    $("#movieDescription").html(data.Plot);
-    themoviedbCall(data.imdbID,1);
-  }else{
-    $("#moviePoster2").attr("src",data.Poster);
-    $("#movieDescription2").html(data.Plot);
-    themoviedbCall(data.imdbID,2);
-  }
-
+function omdbCallCallBack(data){
+    themoviedbCall(data.imdbID);
 }
 
 map.on('click', function(e) {

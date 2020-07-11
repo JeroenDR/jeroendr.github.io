@@ -1,153 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<title>Location Scout</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-	<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet' />
-	 <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList"></script>
-	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
-	<link rel="stylesheet" href="locscoutcss.css">
-</head>
-<body>
-
-<div>
-
-	<div id="detailPanel" class="sidenav">
-		<button id="collapseBtn" onclick="closeNav()" class="collapseBtn"></button>
-		<div id="detailPanelContainer" class="detailPanelContainer">
-	<!-- <a href="javascript:void(0)" class="closebtn" id="closebtn" onclick="closeNav()"></a> -->
-		<h3 id="locationTitle" class="movieTitle"></h3>
-		<div class="panel-group accordionPanelMain" id="accordion">
-  <div class="panel panel-default template">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#movieCollapseOne" id="movieTitle">
-        </a>
-      </h4>
-    </div>
-    <div id="movieCollapseOne" class="panel-collapse collapse show">
-      <div class="panel-body">
-        <h4 class="detailPanelLabel">Scene description</h4>
-			<div class="panel panel-default subpanel">
-			    <div class="panel-body">
-						<div class="row">
-							<div class="col-sm-12">
-								<p id="movieSceneDescription" class="movieSceneDescription"></p>
-							</div>
-						</div>
-					</div>
-			  </div>
-				<h4 class="detailPanelLabel">Movie info</h4>
-				<div class="panel panel-default subpanel">
-						<div class="panel-body">
-							<div class="row" >
-							<div class="col-sm-12 span4">
-									<img src="" id="moviePoster" class="moviePoster">
-									<div id="movieDescription" class="movieDescription"></div>
-								</div>
-							</div>
-							<div class="row" >
-							<div class="col-sm-12 span4">
-								<table id="castTable" class="table table-dark casttable">
-									<thead>
-										<tr>
-											<th scope="col">Character name</th>
-											<th scope="col">Played by</th>
-										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
-				</div>
-      </div>
-    </div>
-  </div>
-
-	<div id="moviePanelTwo" class="panel panel-default template">
-		<div class="panel-heading">
-			<h4 class="panel-title">
-				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#movieCollapseTwo" id="movieTitle2">
-				</a>
-			</h4>
-		</div>
-		<div id="movieCollapseTwo" class="panel-collapse collapse">
-			<div class="panel-body">
-				<h4 class="detailPanelLabel">Scene description</h4>
-			<div class="panel panel-default subpanel">
-					<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-12">
-								<p id="movieSceneDescription2" class="movieSceneDescription"></p>
-							</div>
-						</div>
-					</div>
-				</div>
-				<h4 class="detailPanelLabel">Movie info</h4>
-				<div class="panel panel-default subpanel">
-						<div class="panel-body">
-							<div class="row" >
-							<div class="col-sm-12 span4">
-									<img src="" id="moviePoster2" class="moviePoster">
-									<div id="movieDescription2" class="movieDescription"></div>
-								</div>
-							</div>
-							<div class="row" >
-							<div class="col-sm-12 span4">
-								<table id="castTable2" class="table table-dark casttable">
-									<thead>
-										<tr>
-											<th scope="col">Character name</th>
-											<th scope="col">Played by</th>
-										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-									</table>
-								</div>
-							</div>
-						</div>
+	<head>
+		<title>Location Scout</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.js'></script>
+	    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.2.0/mapbox-gl.css' rel='stylesheet' />
+		 <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList"></script>
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+		<link rel="stylesheet" href="locscoutcss.css">
+	</head>
+	
+	<body>
+		<div>
+			<div id="detailPanel" class="sidenav">
+				<button id="collapseBtn" onclick="closeNav()" class="collapseBtn"></button>
+				<div id="detailPanelContainer" class="detailPanelContainer">
+					<h3 id="locationTitle" class="movieTitle"></h3>
+					<div class="panel-group accordionPanelMain" id="accordion"></div>
 				</div>
 			</div>
+			<div id="map" class="map"></div>
 		</div>
-	</div>
 
-</div>
-</div>
-	</div>
+		<div class="modal" id="splashModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h4 class="modal-title">Welcome to FilmScout v0.01</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Welcome the Filmscout. A great source to find movie locations in New York.
+						This is currently under construction and in an early development phase.</p>
 
-	<div id="map" class="map"></div>
-</div>
+						<p>Click a camera icon to see more information about the location.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+		      </div>
 
-<div class="modal" id="splashModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Welcome to FilmScout v0.01</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body">
-        <p>Welcome the Filmscout. A great source to find movie locations in New York.
-				This is currently under construction and in an early development phase.</p>
+		    </div>
+		  </div>
+		</div>
 
-				<p>Click a camera icon to see more information about the location.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-  <script src="js/license.js"></script>
-	<script src="js/locscoutjs.js"></script>
-</body>
+		<script src="js/license.js"></script>
+		<script src="js/locscoutjs.js"></script>
+	</body>
 </html>
