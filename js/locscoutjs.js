@@ -100,7 +100,7 @@ function omdbCall(){
   $.ajax({
     type: "GET",
     dataType: "json",
-    url: "http://www.omdbapi.com/?t=" + moviesToLoad[0].title + "&apikey=" + omdbKey,
+    url: "https://www.omdbapi.com/?t=" + moviesToLoad[0].title + "&apikey=" + omdbKey,
     success: function(data){
       dataFromOmDb = data;
       omdbCallCallBack(data);
