@@ -116,6 +116,9 @@ function addMovieToSidePanel(dataFromMovieDb){
   //get main HTML panel
   var htmlMainSidePanel = document.getElementById("accordion");
   var staticIdForPanelCount = 0
+
+  var imageId = moviesToLoad[0].imgid;
+  var scenePictureSource = "images/mlm/" +imageId + ".png";
   if(moviesToLoad.length>1){
     staticIdForPanelCount = moviesToLoad.length - (moviesToLoad.length-1);
   }
@@ -131,6 +134,9 @@ function addMovieToSidePanel(dataFromMovieDb){
 
     //scene description from mapbox
     htmlStr += '<div id="' + staticIdForPanel + '" class="panel-collapse collapse' + ((firstMovieToBeAdded) ? " show": "") +'">';
+      htmlStr += '<div class="row">';
+    htmlStr += '<img id="'+imageId + '" src="'+ scenePictureSource + '" class="scenePicture">';
+    htmlStr += '</div>';
     htmlStr += '<div class="panel-body">';
 
     htmlStr += '<h4 class="detailPanelLabel">Scene description</h4>';
@@ -186,6 +192,28 @@ function addMovieToSidePanel(dataFromMovieDb){
     firstMovieToBeAdded = false;
     mainMovieContainer.innerHTML = htmlStr;
    htmlMainSidePanel.appendChild(mainMovieContainer)
+
+
+   // Get the modal
+   var modal = document.getElementById("zoomPictureModal");
+
+   // Get the image and insert it inside the modal - use its "alt" text as a caption
+   var img = document.getElementById(imageId);
+   var modalImg = document.getElementById("img01");
+   var captionText = document.getElementById("caption");
+   img.onclick = function(){
+     modal.style.display = "block";
+     modalImg.src = this.src;
+     captionText.innerHTML = this.alt;
+   }
+
+   // Get the <span> element that closes the modal
+   var span = document.getElementsByClassName("closeModalForPicture")[0];
+
+   // When the user clicks on <span> (x), close the modal
+   span.onclick = function() {
+     modal.style.display = "none";
+   }
 
    //handle multiple movies being loaded
    moviesToLoad.shift();
