@@ -135,7 +135,9 @@ function addMovieToSidePanel(dataFromMovieDb){
     //scene description from mapbox
     htmlStr += '<div id="' + staticIdForPanel + '" class="panel-collapse collapse' + ((firstMovieToBeAdded) ? " show": "") +'">';
       htmlStr += '<div class="row">';
+      htmlStr += '<div class="col-sm-12">';
     htmlStr += '<img id="'+imageId + '" src="'+ scenePictureSource + '" class="scenePicture">';
+    htmlStr += '</div>';
     htmlStr += '</div>';
     htmlStr += '<div class="panel-body">';
 
