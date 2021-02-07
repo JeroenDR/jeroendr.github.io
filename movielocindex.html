@@ -20,6 +20,31 @@
 					<div class="panel-group accordionPanelMain" id="accordion"></div>
 				</div>
 			</div>
+
+			<div class="topPanelMenu">
+			<select name="movietitles" id="movieTitlesDropDown" onchange="filterResults(this.value)">
+				<option value="All Movies">All Movies</option>
+				<optgroup label="_________">
+					<option value="Die Hard with a Vengeance">Die Hard with a Vengeance</option>
+					<option value="Elf">Elf</option>
+					<option value="Home Alone 2: Lost in New York">Home Alone 2: Lost in New York</option>
+					<option value="Inside Man">Inside Man</option>
+					<option value="Joker">Joker</option>
+					<option value="Manhattan">Manhattan</option>
+					<option value="Once Upon a Time in America">Once Upon a Time in America</option>
+					<option value="Sleepless in Seattle">Sleepless in Seattle</option>
+					<option value="Spider-Man">Spider-Man</option>
+					<option value="The Assistant">The Assistant</option>
+					<option value="The Godfather">The Godfather</option>
+					<option value="The Lost World: Jurassic Park">The Lost World: Jurassic Park</option>
+					<option value="You've Got Mail">You've Got Mail</option>
+				</optgroup>
+			</select>
+<a href="#" onclick="return showInfo();">
+          <span>&#8505;</span>
+				</a>
+
+			</div>
 			<div id="map" class="map"></div>
 		</div>
 
@@ -41,6 +66,27 @@
 		        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
 		      </div>
 
+		    </div>
+		  </div>
+		</div>
+
+		<div class="modal" id="infoModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h4 class="modal-title">Disclaimer</h4>
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		      </div>
+		      <div class="modal-body">
+		        <p>All of the content featured or displayed on this website, including without limitation
+							graphics, photographs, images, artwork, and illustrations (“Content”),
+							is owned by the respective owner, its affiliates, partners, vendors or licensors and/or its Content providers.
+							</p>
+						<p>In case you own any of the material and do not want it to appear on the website, contact us and they will be removed.</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+		      </div>
 		    </div>
 		  </div>
 		</div>

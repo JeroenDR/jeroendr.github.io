@@ -244,6 +244,8 @@ function omdbCallCallBack(data){
     themoviedbCall(data.imdbID);
 }
 
+
+
 map.on('click', function(e) {
 
   var features = map.queryRenderedFeatures(e.point, {
@@ -271,3 +273,17 @@ map.on('click', function(e) {
   openNav();
   populateSidePanel(feature);
 });
+
+function filterResults(moviename){
+  if(moviename != "All Movies"){
+    map.setFilter('movieloc-nyc', ['==', ['get', 'title'], moviename]);
+  }else{
+    map.setFilter('movieloc-nyc', undefined)
+  }
+
+}
+
+function showInfo(){
+  $('#infoModal').modal('show');
+
+}

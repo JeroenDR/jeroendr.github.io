@@ -243,6 +243,11 @@ body{
   transition: 0.3s;
 }
 
+.topPanelMenu {
+  background-color: #343332;
+   text-align: center;
+}
+
 .closeModalForPicture:hover,
 .closeModalForPicture:focus {
   color: #bbb;
