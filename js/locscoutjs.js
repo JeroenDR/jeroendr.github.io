@@ -74,6 +74,10 @@ function populateSidePanel(feature){
   //flag used to open up only the top moviepanel
   firstMovieToBeAdded=true;
 
+  //TODO: quick workaround for sex and the city bug, update in map and remove this
+  if(feature.properties.title == "Sex and the City"){
+    feature.properties.title = feature.properties.title + " the movie";
+  }
   //construct movies to be loaded in the side panel, multiple movies at one location are stored different into one JSON object
   if(feature.properties.features == undefined){
     moviesToLoad.push(feature.properties);
