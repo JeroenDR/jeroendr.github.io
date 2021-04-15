@@ -3,6 +3,10 @@ var isSidePanelOpen = false;
 var dataFromOmDb = null;
 var firstMovieToBeAdded = false;
 var moviesToLoad = [];
+var moviesWithPlaceLocation = [{title:"Home Alone 2: Lost in New York", location:"The Plaza Hotel"},{title:"Sleepless in Seattle", location:"The Plaza Hotel"},{title:"Sleepless in Seattle", location:"Empire State Building"},{title:"Elf", location:"Empire State Building"},{title:"Inside Man", location:"Alexander Hamilton U.S. Custom House "}];
+var locationsToShowForFilter = [];
+var filterMultiLocations = "";
+var selectedMovieToFilterOn = "All Movies";
 //How To Screen
 $(window).on('load',function(){
         $('#splashModal').modal('show');
@@ -74,10 +78,6 @@ function populateSidePanel(feature){
   //flag used to open up only the top moviepanel
   firstMovieToBeAdded=true;
 
-  //TODO: quick workaround for sex and the city bug, update in map and remove this
-  if(feature.properties.title == "Sex and the City"){
-    feature.properties.title = feature.properties.title + " the movie";
-  }
   //construct movies to be loaded in the side panel, multiple movies at one location are stored different into one JSON object
   if(feature.properties.features == undefined){
     moviesToLoad.push(feature.properties);
@@ -89,7 +89,10 @@ function populateSidePanel(feature){
 
     for (i = 0; i < movieListForLocation.length; i++)
     {
-      moviesToLoad.push(movieListForLocation[i]);
+      if((selectedMovieToFilterOn == "All Movies") || selectedMovieToFilterOn == movieListForLocation[i].title){
+        moviesToLoad.push(movieListForLocation[i]);
+      }
+
     }
   }
 
@@ -100,16 +103,15 @@ function populateSidePanel(feature){
 }
 
 function omdbCall(){
-
   $.ajax({
     type: "GET",
     dataType: "json",
-    url: "https://www.omdbapi.com/?t=" + moviesToLoad[0].title + "&apikey=" + omdbKey,
+    url: "https://www.omdbapi.com/?t=" + moviesToLoad[0].title + "&y=" + moviesToLoad[0].year + "&apikey=" + omdbKey,
     success: function(data){
       dataFromOmDb = data;
       omdbCallCallBack(data);
     },
-    async:false,
+//    async:false,
     error: function() {
         return null;
     }
@@ -117,6 +119,7 @@ function omdbCall(){
 }
 
 function addMovieToSidePanel(dataFromMovieDb){
+
   //get main HTML panel
   var htmlMainSidePanel = document.getElementById("accordion");
   var staticIdForPanelCount = 0
@@ -236,7 +239,7 @@ function themoviedbCall(id){
     success: function(data){
       addMovieToSidePanel(data);
     },
-    async:false,
+  //  async:false,
     error: function() {
         return null;
     }
@@ -279,8 +282,22 @@ map.on('click', function(e) {
 });
 
 function filterResults(moviename){
+
+  selectedMovieToFilterOn = moviename;
   if(moviename != "All Movies"){
-    map.setFilter('movieloc-nyc', ['==', ['get', 'title'], moviename]);
+    //map.setFilter('movieloc-nyc', ['==', ['get', 'title'], moviename]);
+  //  map.setFilter('movieloc-nyc', ['any', ['get', 'title'], moviename]);
+
+
+  var selectedComboItem = $("#movieTitlesDropDown :selected")[0];
+  var movieWithPlaceLocations = selectedComboItem.attributes.placeloc.value;
+  if(movieWithPlaceLocations){
+    getLocationByTitle(moviename);
+    buildLocationFilter();
+  }
+    var singleMovieLocationFilter = ["==", ['get', 'title'], moviename];
+    var multiMovieLocationFilter = ['in', ['get', 'placename'], filterMultiLocations];
+    map.setFilter('movieloc-nyc',["any",singleMovieLocationFilter,multiMovieLocationFilter]);
   }else{
     map.setFilter('movieloc-nyc', undefined)
   }
@@ -290,4 +307,22 @@ function filterResults(moviename){
 function showInfo(){
   $('#infoModal').modal('show');
 
+}
+
+function getLocationByTitle(title) {
+  return moviesWithPlaceLocation.filter(
+      function(moviesWithPlaceLocation){ if(moviesWithPlaceLocation.title == title){locationsToShowForFilter.push(moviesWithPlaceLocation.location)} }
+  );
+}
+
+function buildLocationFilter(){
+
+  for (i = 0; i < locationsToShowForFilter.length; i++)
+  {
+    filterMultiLocations += locationsToShowForFilter[i];
+    if(i!=(locationsToShowForFilter.length-1)){
+      filterMultiLocations += ", ";
+    }
+
+  }
 }
