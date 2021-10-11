@@ -48,6 +48,9 @@ function openNav() {
     $("#collapseBtn").html("<");
     $("#collapseBtn").removeClass("collapseBtnPortrait");
     $("#collapseBtn").addClass("collapseBtnLandscape");
+    $("#detailPanelContainer").addClass("detailPanelContainerLandscape");
+
+
   }else{
     $("#detailPanel").addClass("sidePanelPortraitOpen");
     $("#detailPanel").removeClass("sidePanelPortraitCollapsed");
@@ -56,7 +59,7 @@ function openNav() {
     $("#collapseBtn").html("v");
     $("#collapseBtn").removeClass("collapseBtnLandscape");
     $("#collapseBtn").addClass("collapseBtnPortrait");
-
+    $("#detailPanelContainer").addClass("detailPanelContainerPortrait");
   }
   document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
   isSidePanelOpen = true;
@@ -134,7 +137,6 @@ function addMovieToSidePanel(dataFromMovieDb){
   var mainMovieContainer = document.createElement("div");
    mainMovieContainer.setAttribute("class", "panel panel-default template");
    var htmlStr = '<div class="panel-heading">';
-   htmlStr += '<h4 class="panel-title">';
    htmlStr += '<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#' + staticIdForPanel + '"">' + dataFromOmDb.Title +'</a>';
    htmlStr += '</h4>';
    htmlStr += '</div>';
@@ -146,7 +148,9 @@ function addMovieToSidePanel(dataFromMovieDb){
     htmlStr += '<img id="'+imageId + '" src="'+ scenePictureSource + '" class="scenePicture">';
     htmlStr += '</div>';
     htmlStr += '</div>';
+    htmlStr += '<h4 class="panel-title"><div class="accessMain '+moviesToLoad[0].access + '">'+moviesToLoad[0].access + '</div></h4>';
     htmlStr += '<div class="panel-body">';
+//    htmlStr += '<h4 class="panel-title"><div class='+moviesToLoad[0].access + '>'+moviesToLoad[0].access + '</div>';
 
     htmlStr += '<h4 class="detailPanelLabel">Scene description</h4>';
     htmlStr += '<div class="panel panel-default subpanel">';
@@ -158,7 +162,6 @@ function addMovieToSidePanel(dataFromMovieDb){
     htmlStr += '</div>';
     htmlStr += '</div>';
     htmlStr += '</div>';
-
     htmlStr += '<h4 class="detailPanelLabel">Movie info</h4>';
     htmlStr += '<div class="panel panel-default subpanel">';
     htmlStr += '<div class="panel-body">';

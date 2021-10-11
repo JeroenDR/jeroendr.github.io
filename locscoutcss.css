@@ -59,6 +59,29 @@ body{
         margin-left: 140px;
       }
 
+      .accessMain{
+        font-weight: bold; /* Making font bold */
+        font-size : 14px;
+        width : 100%;
+        border-radius: 20px; /* Making border radius */
+        padding: 5px 30px 5px 30px; /* Making space around letters */
+        display: inline-block;
+        text-align: center;
+        margin-right : 5%;
+      }
+
+      .public{
+        background-color: green; /* Changing background color */
+      }
+
+      .private{
+        background-color:red;
+      }
+
+      .paid{
+        background-color:blue;
+      }
+
       .casttable{
         margin-top: 10px;
         font-size: 14px;
@@ -153,6 +176,7 @@ body{
   color : white;
   font-weight: bold;
   float : none;
+  height: 5%;
   width : 100%;
 }
 
@@ -162,12 +186,24 @@ body{
   color : white;
   font-weight: bold;
   float : right;
+  width: 3%;
   height : 100%;
 }
 
 .detailPanelContainer{
   overflow-x: hidden; /* Disable horizontal scroll */
   overflow-y: auto; /* Disable horizontal scroll */
+    position: absolute;
+     left: 0; right: 0; bottom: 0;
+}
+
+.detailPanelContainerLandscape{
+  top: 0;
+   width: 97%;
+}
+
+.detailPanelContainerPortrait{
+  height: 95%;
 }
 
 .collapseBtn{
